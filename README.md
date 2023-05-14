@@ -24,12 +24,12 @@ Include `SDL_inprint.h`.
 Now, you can:
 
 ```c
-    screen = SDL_SetVideoMode(width, height, bpp, flags);
+    tv = SDL_SetVideoMode(width, height, bpp, flags);
 
     prepare_inline_font();
 
     incolor(0xFF0000, 0x333333);
-    inprint(screen, "Hello World!", 10, 10);
+    inprint(tv, "Hello World!", 10, 10);
 
     kill_inline_font();
 ```

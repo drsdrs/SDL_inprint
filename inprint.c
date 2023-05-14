@@ -1,4 +1,4 @@
-#include "SDL.h"
+#include <SDL2/SDL.h>
 
 #include "inline_font.h" /* Actual font data */
 
@@ -21,10 +21,10 @@ void prepare_inline_font(void)
 	len = inline_font->h * inline_font->w / 8;
 
 	/* Copy */
-	for (i = 0; i < len; i++) 
+	for (i = 0; i < len; i++)
 	{
 		tmp = (Uint8)inline_font_bits[i];
-		for (j = 0; j < 8; j++) 
+		for (j = 0; j < 8; j++)
 		{
 			Uint8 mask = (0x01 << j);
 			pix_ptr[i * 8 + j] = (tmp & mask) >> j;
@@ -34,7 +34,7 @@ void prepare_inline_font(void)
 	selected_font = inline_font;
 }
 void kill_inline_font(void) { SDL_FreeSurface(inline_font); inline_font = NULL; }
-void infont(SDL_Surface *font) 
+void infont(SDL_Surface *font)
 {
 	selected_font = font;
 	if (font == NULL) prepare_inline_font();
@@ -42,10 +42,10 @@ void infont(SDL_Surface *font)
 void incolor(Uint32 fore, Uint32 back) /* Colors must be in 0x00RRGGBB format ! */
 {
 	SDL_Color pal[2];
-	pal[0].r = (Uint8)((back & 0x00FF0000) >> 16); 
+	pal[0].r = (Uint8)((back & 0x00FF0000) >> 16);
 	pal[0].g = (Uint8)((back & 0x0000FF00) >> 8);
 	pal[0].b = (Uint8)((back & 0x000000FF));
-	pal[1].r = (Uint8)((fore & 0x00FF0000) >> 16); 
+	pal[1].r = (Uint8)((fore & 0x00FF0000) >> 16);
 	pal[1].g = (Uint8)((fore & 0x0000FF00) >> 8);
 	pal[1].b = (Uint8)((fore & 0x000000FF));
 	SDL_SetColors(selected_font, pal, 0, 2);

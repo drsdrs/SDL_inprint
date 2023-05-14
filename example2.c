@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 	Uint32 height = 480;
 	Uint32 flags = 0;
 
-	int i; for (i = 1; i < argc; i++) if (!strcasecmp("--fullscreen", argv[i])) flags |= SDL_WINDOW_FULLSCREEN;
+	int i; for (i = 1; i < argc; i++) if (!strcasecmp("--fulltv", argv[i])) flags |= SDL_WINDOW_FULLtv;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		fprintf(stderr, "Video initialization failed: %s\n", SDL_GetError());
@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 	inrenderer(renderer);
 	prepare_inline_font();
 
-	/* Clear screen */
+	/* Clear tv */
 	SDL_SetRenderDrawColor(renderer, 0x33, 0x33, 0x33, 255);
 	SDL_RenderClear(renderer);
 

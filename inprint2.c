@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include "inline_font.h" /* Actual font data */
 
@@ -22,7 +22,7 @@ void prepare_inline_font()
 
 	if (inline_font != NULL) { selected_font = inline_font; return; }
 
-	surface = SDL_CreateRGBSurface(0, inline_font_width, inline_font_height, 32, 
+	surface = SDL_CreateRGBSurface(0, inline_font_width, inline_font_height, 32,
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff
 #else
@@ -37,7 +37,7 @@ void prepare_inline_font()
 	len = surface->h * surface->w / 8;
 
 	/* Copy */
-	for (i = 0; i < len; i++) 
+	for (i = 0; i < len; i++)
 	{
 		tmp = (Uint8)inline_font_bits[i];
 		for (j = 0; j < 8; j++)
@@ -53,7 +53,7 @@ void prepare_inline_font()
 	selected_font = inline_font;
 }
 void kill_inline_font(void) { SDL_DestroyTexture(inline_font); inline_font = NULL; }
-void inrenderer(SDL_Renderer *renderer) 
+void inrenderer(SDL_Renderer *renderer)
 {
 	selected_renderer = renderer;
 }
@@ -78,7 +78,7 @@ void incolor1(SDL_Color *color)
 void incolor(Uint32 fore, Uint32 unused) /* Color must be in 0x00RRGGBB format ! */
 {
 	SDL_Color pal[1];
-	pal[0].r = (Uint8)((fore & 0x00FF0000) >> 16); 
+	pal[0].r = (Uint8)((fore & 0x00FF0000) >> 16);
 	pal[0].g = (Uint8)((fore & 0x0000FF00) >> 8);
 	pal[0].b = (Uint8)((fore & 0x000000FF));
 	SDL_SetTextureColorMod(selected_font, pal[0].r, pal[0].g, pal[0].b);
@@ -118,5 +118,36 @@ void inprint(SDL_Renderer *dst, const char *str, Uint32 x, Uint32 y)
 		SDL_RenderCopy(dst, selected_font, &s_rect, &d_rect);
 		d_rect.x += s_rect.w;
 	}
+}
+void intv_char(SDL_Renderer *dst, const char ch, Uint32 x, Uint32 y){
+	SDL_Rect s_rect;
+	SDL_Rect d_rect;
+
+	d_rect.x = x;
+	d_rect.y = y;
+	s_rect.w = selected_font_w / CHARACTERS_PER_ROW;
+	s_rect.h = selected_font_h / CHARACTERS_PER_COLUMN;
+	d_rect.w = s_rect.w;
+	d_rect.h = s_rect.h;
+
+	if (dst == NULL) dst = selected_renderer;
+
+	int id = (int)ch;
+#if (CHARACTERS_PER_COLUMN != 1)
+	int row = id / CHARACTERS_PER_ROW;
+	int col = id % CHARACTERS_PER_ROW;
+	s_rect.x = col * s_rect.w;
+	s_rect.y = row * s_rect.h;
+#else
+	s_rect.x = id * s_rect.w;
+	s_rect.y = 0;
+#endif
+	if (id == '\n'){
+		d_rect.x = x;
+		d_rect.y += s_rect.h;
+	}
+	SDL_RenderCopy(dst, selected_font, &s_rect, &d_rect);
+	d_rect.x += s_rect.w;
+
 }
 SDL_Texture *get_inline_font(void) { return selected_font; }
