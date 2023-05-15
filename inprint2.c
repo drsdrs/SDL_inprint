@@ -119,7 +119,7 @@ void inprint(SDL_Renderer *dst, const char *str, Uint32 x, Uint32 y)
 		d_rect.x += s_rect.w;
 	}
 }
-void intv_char(SDL_Renderer *dst, const char ch, Uint32 x, Uint32 y){
+void inprint_char(SDL_Renderer *dst, const char ch, Uint32 x, Uint32 y){
 	SDL_Rect s_rect;
 	SDL_Rect d_rect;
 
